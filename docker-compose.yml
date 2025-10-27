@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: apiwave-postgres
+    environment:
+      POSTGRES_DB: apiwave
+      POSTGRES_USER: apiwave
+      POSTGRES_PASSWORD: apiwave_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/src/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - apiwave-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: apiwave-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - apiwave-network
+
+  # Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: apiwave-backend
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://apiwave:apiwave_dev_password@postgres:5432/apiwave
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: dev_jwt_secret_key
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - apiwave-network
+    command: npm run dev
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: apiwave-frontend
+    environment:
+      VITE_API_URL: http://localhost:3001
+      VITE_WS_URL: ws://localhost:3001
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - apiwave-network
+    command: npm run dev
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  apiwave-network:
+    driver: bridge

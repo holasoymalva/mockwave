@@ -1,8 +1,93 @@
-# APIwave
+# Apiwave - Backend Generation Platform
 
 > Generate complete backend projects and APIs instantly using AI-powered automation
 
-APIwave is a modern SaaS platform that transforms API specifications into production-ready backend projects in seconds. Whether you're prototyping a new idea or building a production API, APIwave handles the heavy lifting so you can focus on what matters.
+Apiwave is a modern SaaS platform that transforms API specifications into production-ready backend projects in seconds. Whether you're prototyping a new idea or building a production API, Apiwave handles the heavy lifting so you can focus on what matters.
+
+## 🏗️ Development Setup
+
+This repository contains the complete Apiwave platform built as a monorepo with React frontend and Node.js backend.
+
+### Project Structure
+
+```
+apiwave-platform/
+├── frontend/          # React frontend application
+├── backend/           # Node.js backend services  
+├── docker-compose.yml # Local development environment
+└── package.json       # Monorepo configuration
+```
+
+### Prerequisites
+
+- Node.js 18+ and npm 9+
+- Docker and Docker Compose (for local development)
+
+### Quick Start
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Set up environment variables:**
+   ```bash
+   cp .env.example .env
+   cp frontend/.env.example frontend/.env
+   # Edit the .env files with your configuration
+   ```
+
+3. **Start with Docker (recommended):**
+   ```bash
+   npm run docker:up
+   ```
+
+4. **Or start manually:**
+   ```bash
+   # Start database services
+   docker-compose up postgres redis -d
+   
+   # Start both frontend and backend
+   npm run dev
+   ```
+
+### Available Scripts
+
+- `npm run dev` - Start both frontend and backend in development mode
+- `npm run build` - Build both applications for production
+- `npm run test` - Run tests for both applications
+- `npm run lint` - Lint all code
+- `npm run format` - Format code with Prettier
+- `npm run docker:up` - Start all services with Docker
+- `npm run docker:down` - Stop all Docker services
+
+### Services
+
+- **Frontend**: http://localhost:3000
+- **Backend**: http://localhost:3001
+- **PostgreSQL**: localhost:5432
+- **Redis**: localhost:6379
+
+### Technology Stack
+
+**Frontend:**
+- React 18 with TypeScript
+- Vite for build tooling
+- Tailwind CSS for styling
+- React Query for state management
+- Monaco Editor for code viewing
+
+**Backend:**
+- Node.js with Express.js
+- TypeScript
+- PostgreSQL database
+- Redis for caching
+- Socket.io for real-time features
+
+**Development Tools:**
+- ESLint + Prettier for code quality
+- Vitest for testing
+- Docker for containerization
 
 ## 🚀 Features
 

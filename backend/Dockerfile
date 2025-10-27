@@ -1,0 +1,26 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
+COPY . .
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S apiwave -u 1001
+
+# Change ownership of the app directory
+RUN chown -R apiwave:nodejs /app
+USER apiwave
+
+# Expose port
+EXPOSE 3001
+
+# Start the application
+CMD ["npm", "run", "dev"]
